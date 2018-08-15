@@ -8,11 +8,11 @@ public Plugin:myinfo =
 {
 	name		= "[Keys] VIP",
 	author	= "R1KO",
-	version	= "1.2",
+	version	= "1.4",
 	url		= "hlmod.ru"
 };
 
-#define EXT_STATUS	1	// Разрешить ли ключам типа vip_add продлевать VIP-статус
+#define EXT_STATUS	0	// Разрешить ли ключам типа vip_add продлевать VIP-статус
 #define GC_STATUS		0	// Разрешить ли ключам типа vip_add изменять VIP-группу (работает только если включен EXT_STATUS)
 #define CMP_VGRP		1	// Ключ типа vip_add может продлевать VIP-статус только если VIP-группа совпадает (работает только если включен EXT_STATUS)
 							// Если включено - отключает GC_STATUS
@@ -213,18 +213,18 @@ public bool:OnKeyUse(iClient, const String:sKeyType[], Handle:hParamsArr, String
 			return false;
 		}
 
-		if(iClientID == -1)
+		if(bVip && iClientID == -1)
 		{
-			VIP_RemoveClientVIP(iClient, false, false);
+			VIP_RemoveClientVIP2(0, iClient, false, false);
 		}
 
 		decl String:sTime[64], iTime;
 		GetArrayString(hParamsArr, 1, sTime, sizeof(sTime));
 		iTime = StringToInt(sTime);
 		#if USE_VIP_V3 == 1
-		VIP_SetClientVIP(0, iClient, iTime, sParam, true);
+		VIP_GiveClientVIP(0, iClient, iTime, sParam, true);
 		#else
-		VIP_SetClientVIP(iClient, iTime, AUTH_STEAM, sParam, true);
+		VIP_GiveClientVIP(iClient, iTime, sParam, true);
 		#endif
 		
 		if(iTime)
